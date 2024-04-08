@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:project/model/student.dart';
 import 'package:project/view/gps.dart';
+import 'package:project/view/home2.dart';
 import 'package:project/view/insert.dart';
 import 'package:project/view/update.dart';
 
@@ -16,36 +17,66 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Firestore List'),
         actions: [
           IconButton(
-              onPressed: () {
-                Get.to(const Insert()); //then필요없이 자동으로 스트리밍됨
-              },
-              icon: const Icon(Icons.add_outlined))
+            onPressed: () {
+              Get.to(const Insert());
+            },
+            icon: const Icon(Icons.add_outlined),
+          )
         ],
       ),
       body: Center(
-          child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('musteatplace')
-            .orderBy('name', descending: false)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('musteatplace')
+              .orderBy('name', descending: false)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final documents = snapshot.data!.docs;
+            return ListView(
+              children: documents.map((e) => _buildItemWidget(e)).toList(),
             );
-          }
-          final documents = snapshot.data!.docs; //doc에 데이터가 다 들어있다.
-          return ListView(
-            children: documents.map((e) => _buildItemWidget(e)).toList(),
-          );
-        },
-      )),
+          },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('FireBase'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(Home2());
+              },
+              child: Text('Sqlite'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(Insert());
+              },
+              child: Text('세 번째 버튼'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -75,14 +106,12 @@ class _HomeState extends State<Home> {
       key: ValueKey(doc),
       onDismissed: (direction) async {
         if (direction == DismissDirection.endToStart) {
-          // 삭제 기능 실행
           FirebaseFirestore.instance
               .collection('musteatplace')
               .doc(doc.id)
               .delete();
           await deleteImage(musteatplace.name);
         } else if (direction == DismissDirection.startToEnd) {
-          // 수정 기능 실행
           Get.to(const UpdatePage(), arguments: [
             doc.id,
             doc['name'],
@@ -98,7 +127,6 @@ class _HomeState extends State<Home> {
       },
       child: GestureDetector(
         onTap: () {
-          // 탭하여 수정 페이지로 이동하는 기능
           Get.to(const GPSPage(), arguments: [
             doc.id,
             doc['name'],

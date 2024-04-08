@@ -4,20 +4,20 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 
-class GPSPage extends StatefulWidget {
-  const GPSPage({Key? key}) : super(key: key);
+class GPSPage1 extends StatefulWidget {
+  const GPSPage1({Key? key}) : super(key: key);
   @override
-  State<GPSPage> createState() => _GPSPageState();
+  State<GPSPage1> createState() => _GPSPage1State();
 }
 
-class _GPSPageState extends State<GPSPage> {
+class _GPSPage1State extends State<GPSPage1> {
   var value = Get.arguments ?? "__";
   late TextEditingController nameController;
   late TextEditingController latitudeController; // 위도를 입력받는 컨트롤러
   late TextEditingController longitudeController; // 경도를 입력받는 컨트롤러
   late MapController mapController;
   late Position currentPosition;
-  bool canRun = false; // 지
+  bool canRun = false; //
 
   @override
   void initState() {
@@ -28,8 +28,9 @@ class _GPSPageState extends State<GPSPage> {
     mapController = MapController();
 
     nameController.text = value[1];
-    latitudeController.text = value[3];
-    longitudeController.text = value[4];
+
+    latitudeController.text = value[4];
+    longitudeController.text = value[5];
 
     // 위치 정보 가져오기
     checkLocationPermission();
