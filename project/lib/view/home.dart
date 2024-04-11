@@ -5,6 +5,7 @@ import 'package:get/route_manager.dart';
 import 'package:project/model/student.dart';
 import 'package:project/view/gps.dart';
 import 'package:project/view/home2.dart';
+import 'package:project/view/home3.dart';
 import 'package:project/view/insert.dart';
 import 'package:project/view/update.dart';
 
@@ -70,9 +71,9 @@ class _HomeState extends State<Home> {
             ),
             ElevatedButton(
               onPressed: () {
-                Get.to(Insert());
+                Get.to(OurRestaurant());
               },
-              child: Text('세 번째 버튼'),
+              child: Text('MySQL'),
             ),
           ],
         ),
